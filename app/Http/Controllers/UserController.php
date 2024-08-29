@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Repositories\UserRepositoryInterface;
+use App\Http\Resources\UserResource;
 
 class UserController extends Controller
 {
@@ -19,7 +20,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        return $this->userRepository->getAllUsers();
+        $users = $this->userRepository->getAllUsers();
+        return UserResource::collection($users);
     }
 
     /**
@@ -28,7 +30,8 @@ class UserController extends Controller
     public function store(Request $request)
     {
         // TODO: Add validation
-        return $this->userRepository->createUser($request->all());
+        $user = $this->userRepository->createUser($request->all());
+        return new UserResource($user);
     }
 
     /**
@@ -36,7 +39,8 @@ class UserController extends Controller
      */
     public function show(string $id)
     {
-        return $this->userRepository->getUserById($id);
+        $user = $this->userRepository->getUserById($id);
+        return new UserResource($user);
     }
 
     /**
@@ -45,7 +49,8 @@ class UserController extends Controller
     public function update(Request $request, string $id)
     {
         // TODO: Add validation
-        return $this->userRepository->updateUser($id, $request->all());
+        $user = $this->userRepository->updateUser($id, $request->all());
+        return new UserResource($user);
     }
 
     /**
