@@ -48,4 +48,10 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function roles()
+    {
+        // relationship pivot with UserRole
+        return $this->belongsToMany(Role::class, 'user_role');
+    }
 }
