@@ -18,24 +18,36 @@ class PermissionFactory extends Factory
      *
      * @return array<string, mixed>
      */
+    protected static $permissionIndex = 0;
+    protected static $permissions = [];
+
     public function definition(): array
     {
-        $availablePermissions = ['post' => ['create', 'read', 'update', 'delete'], 'user' => ['create', 'read', 'update', 'delete'], 'role' => ['create', 'read', 'update', 'delete'], 'permission' => ['create', 'read', 'update', 'delete']];
+        $availablePermissions = [
+            'post' => ['Create', 'Read', 'Update', 'Delete'],
+            'user' => ['Create', 'Read', 'Update', 'Delete'],
+            'role' => ['Create', 'Read', 'Update', 'Delete'],
+            'permission' => ['Create', 'Read', 'Update', 'Delete']
+        ];
 
-        // transform availablePermissions to array which contains value like 'post.create', 'post.read', etc
-        $transformedPermissions = [];
-        foreach ($availablePermissions as $key => $value) {
-            foreach ($value as $val) {
-                $transformedPermissions[] = $key . '.' . $val;
+        if (empty(self::$permissions)) {
+            foreach ($availablePermissions as $resource => $actions) {
+                foreach ($actions as $action) {
+                    self::$permissions[] = [
+                        'name' => "$action $resource",
+                        'slug' => strtolower($action) . '.' . strtolower($resource),
+                    ];
+                }
             }
         }
 
-        $permission = $this->faker->randomElement($transformedPermissions);
+        $permission = self::$permissions[self::$permissionIndex];
+        self::$permissionIndex = (self::$permissionIndex + 1) % count(self::$permissions);
 
         return [
             'id' => Str::uuid(),
-            'name' => $permission,
-            'slug' => $permission,
+            'name' => $permission['name'],
+            'slug' => $permission['slug'],
             'description' => $this->faker->sentence(),
             'is_active' => true
         ];
