@@ -36,6 +36,7 @@ class PermissionFactory extends Factory
                     self::$permissions[] = [
                         'name' => "$action $resource",
                         'slug' => strtolower($action) . '.' . strtolower($resource),
+                        'description' => 'This permission allows a user to ' . strtolower($action) . ' a ' . $resource,
                     ];
                 }
             }
@@ -48,7 +49,7 @@ class PermissionFactory extends Factory
             'id' => Str::uuid(),
             'name' => $permission['name'],
             'slug' => $permission['slug'],
-            'description' => $this->faker->sentence(),
+            'description' => $permission['description'],
             'is_active' => true
         ];
     }
